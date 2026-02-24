@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  stm_app:
+    build: .
+    container_name: stm_dashboard
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./data:/app/data
+      - ./models:/app/models
+      - ./database:/app/database
+    environment:
+      - PYTHONUNBUFFERED=1
+    restart: unless-stopped
