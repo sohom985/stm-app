@@ -1,0 +1,35 @@
+{
+  "feature_cols": [
+    "energy_kcal",
+    "fat",
+    "saturated_fat",
+    "sugar",
+    "protein",
+    "salt",
+    "fiber",
+    "energy_kcal_zscore",
+    "fat_zscore",
+    "saturated_fat_zscore",
+    "sugar_zscore",
+    "protein_zscore",
+    "salt_zscore",
+    "fiber_zscore",
+    "protein_to_fat_ratio",
+    "sugar_to_energy_ratio"
+  ],
+  "nutrition_features": [
+    "energy_kcal",
+    "fat",
+    "saturated_fat",
+    "sugar",
+    "protein",
+    "salt",
+    "fiber"
+  ],
+  "model_version": "1.0",
+  "training_date": "2026-02-16T17:23:05.974913",
+  "training_samples": 4961,
+  "test_samples": 1241,
+  "score_model_mse": 0.004068780102357386,
+  "score_model_r2": 0.5874756589234003
+}
