@@ -9,7 +9,7 @@ Pillow==10.0.0
 opencv-python-headless==4.8.0.76
 
 # Deep Learning for Visual Analysis
-tensorflow==2.13.0
+tensorflow-cpu==2.13.0
 
 # PDF Processing
 PyPDF2==3.0.1
