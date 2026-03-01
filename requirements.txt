@@ -1,7 +1,7 @@
 # Core Dependencies
 numpy==1.26.4
 pandas==2.2.0
-scikit-learn==1.3.0
+# scikit-learn==1.3.0
 
 # OCR and Image Processing
 pytesseract==0.3.10
@@ -9,7 +9,7 @@ Pillow==10.0.0
 opencv-python-headless==4.8.0.76
 
 # Deep Learning for Visual Analysis
-tensorflow-cpu==2.13.0
+# tensorflow-cpu==2.13.0
 
 # PDF Processing
 pypdf==4.0.1
@@ -21,9 +21,9 @@ requests==2.31.0
 
 # Natural Language Processing
 nltk==3.8.1
-spacy==3.6.1
-transformers==4.33.0
-sentence-transformers==2.2.2
+# spacy==3.6.1
+# transformers==4.33.0
+# sentence-transformers==2.2.2
 
 # Scientific Computing
 scipy==1.15.1
@@ -46,4 +46,4 @@ tqdm==4.66.1
 biopython==1.81
 
 # Anomaly Detection
-pyod==1.1.0
+# pyod==1.1.0
