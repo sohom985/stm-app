@@ -6,9 +6,8 @@ Uses Isolation Forest algorithm (unsupervised anomaly detection)
 
 import numpy as np
 import pandas as pd
-# Removed heavy ML dependencies for Streamlit Cloud deployment
-# from sklearn.ensemble import IsolationForest
-# from sklearn.preprocessing import StandardScaler
+from sklearn.ensemble import IsolationForest
+from sklearn.preprocessing import StandardScaler
 import os
 import sys
 
@@ -31,9 +30,9 @@ class NutritionAnomalyDetector:
         self.n_estimators = N_ESTIMATORS
         self.random_state = RANDOM_STATE
         
-        # The detector model (Isolation Forest) - MOCKED for Streamlit Cloud
-        self.model = "MockedModel"
-        self.scaler = "MockedScaler"
+        # The detector model (Isolation Forest)
+        self.model = None
+        self.scaler = StandardScaler()
         
         # Nutrients to monitor
         self.key_nutrients = [
@@ -71,28 +70,78 @@ class NutritionAnomalyDetector:
     
     def train_detector(self, nutrition_data):
         """
-        Train the anomaly detection model (MOCKED for Streamlit Cloud)
+        Train the anomaly detection model
+        Learns what "normal" nutrition looks like
+        
+        Args:
+            nutrition_data: DataFrame with nutrition facts
+            
+        Returns:
+            Trained model
         """
-        print("\n🎓 Training anomaly detector (Mocked)...")
-        self.model = "TrainedMock"
+        print("\n🎓 Training anomaly detector...")
+        
+        if len(nutrition_data) < 10:
+            print("⚠️  Warning: Very few samples, results may be unreliable")
+        
+        # Normalize the data (scale all nutrients to same range)
+        # Why? So sugar (0-100g) and salt (0-5g) are compared fairly
+        X_scaled = self.scaler.fit_transform(nutrition_data)
+        
+        # Train Isolation Forest
+        self.model = IsolationForest(
+            contamination=self.contamination,
+            n_estimators=self.n_estimators,
+            random_state=self.random_state,
+            max_samples='auto',
+            n_jobs=-1  # Use all CPU cores
+        )
+        
+        self.model.fit(X_scaled)
+        
+        print(f"✅ Model trained on {len(nutrition_data)} products!")
+        print(f"   Expected anomaly rate: {self.contamination*100:.0f}%")
+        
         return self.model
     
     def detect_anomalies(self, nutrition_data):
         """
-        Detect which products are nutritional anomalies (MOCKED for Streamlit Cloud)
-        Always returns "normal" for demo purposes to avoid scikit-learn dependency
+        Detect which products are nutritional anomalies
+        
+        Args:
+            nutrition_data: DataFrame with nutrition facts
+            
+        Returns:
+            DataFrame with anomaly scores and predictions
         """
-        print("🔍 Detecting anomalies (Mocked)...")
+        if self.model is None:
+            raise ValueError("Model not trained! Call train_detector() first")
         
+        print("🔍 Detecting anomalies...")
+        
+        # Scale the data
+        X_scaled = self.scaler.transform(nutrition_data)
+        
+        # Predict anomalies
+        # -1 = anomaly, 1 = normal
+        predictions = self.model.predict(X_scaled)
+        
+        # Get anomaly scores (lower = more anomalous)
+        scores = self.model.score_samples(X_scaled)
+        
+        # Create results DataFrame
         results = nutrition_data.copy()
+        results['is_anomaly'] = predictions == -1
+        results['anomaly_score'] = scores
         
-        # In the mocked version, nothing is an anomaly
-        results['is_anomaly'] = False
-        results['anomaly_score'] = 1.0
-        results['anomaly_score_normalized'] = 1.0
+        # Normalize scores to 0-1 range (0 = most anomalous, 1 = most normal)
+        min_score = scores.min()
+        max_score = scores.max()
+        results['anomaly_score_normalized'] = (scores - min_score) / (max_score - min_score)
         
         anomaly_count = results['is_anomaly'].sum()
-        print(f"✅ Detection complete! Found {anomaly_count} anomalies")
+        print(f"✅ Detection complete!")
+        print(f"   Found {anomaly_count} anomalies out of {len(results)} products")
         
         return results
     
